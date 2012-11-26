@@ -89,6 +89,16 @@ class plugin_manager {
     }
 
     /**
+     * Reset any caches
+     * @param bool $phpunitreset
+     */
+    public static function reset_caches($phpunitreset = false) {
+        if ($phpunitreset) {
+            self::$singletoninstance = null;
+        }
+    }
+
+    /**
      * Returns a tree of known plugins and information about them
      *
      * @param bool $disablecache force reload, cache can be used otherwise
@@ -647,6 +657,16 @@ class available_update_checker {
             self::$singletoninstance = new self();
         }
         return self::$singletoninstance;
+    }
+
+    /**
+     * Reset any caches
+     * @param bool $phpunitreset
+     */
+    public static function reset_caches($phpunitreset = false) {
+        if ($phpunitreset) {
+            self::$singletoninstance = null;
+        }
     }
 
     /**
@@ -1302,7 +1322,7 @@ class available_update_checker {
             $message->name              = 'availableupdate';
             $message->userfrom          = $mainadmin;
             $message->userto            = $admin;
-            $message->subject           = get_string('updatenotifications', 'core_admin');
+            $message->subject           = get_string('updatenotificationsubject', 'core_admin', array('siteurl' => $CFG->wwwroot));
             $message->fullmessage       = $text;
             $message->fullmessageformat = FORMAT_PLAIN;
             $message->fullmessagehtml   = $html;
@@ -2502,5 +2522,16 @@ class plugininfo_report extends plugininfo_base {
 
     public function get_uninstall_url() {
         return new moodle_url('/admin/reports.php', array('delete' => $this->name, 'sesskey' => sesskey()));
+    }
+}
+
+
+/**
+ * Class for local plugins
+ */
+class plugininfo_local extends plugininfo_base {
+
+    public function get_uninstall_url() {
+        return new moodle_url('/admin/localplugins.php', array('delete' => $this->name, 'sesskey' => sesskey()));
     }
 }
