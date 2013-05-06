@@ -67,13 +67,13 @@ if (groups_get_activity_groupmode($cm)) {
     $modulecontext = get_context_instance(CONTEXT_MODULE, $cm->id);
     $canaccessgroups = has_capability('moodle/site:accessallgroups', $modulecontext);
     if ($canaccessgroups) {
-        $groups->availablegroups = groups_get_all_groups($cm->course);
+        $groups->availablegroups = groups_get_all_groups($cm->course, 0, $cm->groupingid);
         $allpart = new stdClass();
         $allpart->id = '0';
         $allpart->name = get_string('allparticipants');
         array_unshift($groups->availablegroups, $allpart);
     } else {
-        $groups->availablegroups = groups_get_all_groups($cm->course, $USER->id);
+        $groups->availablegroups = groups_get_all_groups($cm->course, $USER->id, $cm->groupingid);
     }
     if (!empty($group)) {
         $groups->currentgroup = $group;
