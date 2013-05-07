@@ -114,6 +114,13 @@ abstract class page_wiki {
     function print_header() {
         global $OUTPUT, $PAGE, $CFG, $USER, $SESSION;
 
+        $groupmode = groups_get_activity_groupmode($PAGE->cm);
+
+        if (!empty($this->sub_wiki) && !wiki_user_can_view($this->subwiki)) {
+            echo get_string('cannotviewpage', 'wiki');
+            return;
+        }
+
         $PAGE->set_heading(format_string($PAGE->course->fullname));
 
         $this->set_url();
@@ -128,6 +135,29 @@ abstract class page_wiki {
 
         echo $OUTPUT->header();
 
+        $group_name = '';
+        $user_name  = '';
+        if($this->subwiki){
+            $group_id = $this->subwiki->groupid;
+            if ( $this->subwiki->userid ) {
+                $context = get_context_instance(CONTEXT_MODULE, $PAGE->cm->id);
+                $course_users = get_enrolled_users($context);
+                $user = $course_users[$this->subwiki->userid];
+                $user_name = $user->firstname . ' ' . $user->lastname;
+            }
+        } else {
+            $group_id = $this->gid;
+        }
+        if ($groupmode == SEPARATEGROUPS || $groupmode == VISIBLEGROUPS) {
+            if ($group_id == 0) {
+                $group_name = get_string('allparticipants');
+            } else {
+                $group_name = groups_get_group_name($group_id);
+            }
+        }
+
+        echo $OUTPUT->heading($PAGE->cm->name . ($group_name?" ($group_name)":'') . ($user_name?" ($user_name)":''),2);
+        $this->wikioutput->wiki_print_subwiki_selector($PAGE->activityrecord, $this->subwiki, $PAGE, 'view');
         echo $this->wikioutput->wiki_info();
 
         // tabs are associated with pageid, so if page is empty, tabs should be disabled
