@@ -323,8 +323,6 @@ class page_wiki_view extends page_wiki {
 
         parent::print_header();
 
-        $this->wikioutput->wiki_print_subwiki_selector($PAGE->activityrecord, $this->subwiki, $this->page, 'view');
-
         if (!empty($this->page)) {
             echo $this->wikioutput->prettyview_link($this->page);
         }
