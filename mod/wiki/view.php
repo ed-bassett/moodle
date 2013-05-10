@@ -203,10 +203,6 @@ if ($id) {
         $edit = has_capability('mod/wiki:editpage', $context);
         $manageandedit = $manage && $edit;
 
-        if ($groupmode == VISIBLEGROUPS and ($modeanduser || $modeandgroupmember) and !$manageandedit) {
-            print_error('nocontent','wiki');
-        }
-
         $params = array('wid' => $wiki->id, 'group' => $gid, 'uid' => $uid, 'title' => $title);
         $url = new moodle_url('/mod/wiki/create.php', $params);
         redirect($url);
