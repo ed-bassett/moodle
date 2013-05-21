@@ -80,6 +80,7 @@ if (groups_get_activity_groupmode($cm)) {
     } else {
         $groups->currentgroup = groups_get_activity_group($cm);
     }
+    $groups->availablegroups = array_filter($groups->availablegroups,function($_) use ($groups) {return $_->id==$groups->currentgroup;});
 }
 
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
