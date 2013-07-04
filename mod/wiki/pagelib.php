@@ -641,6 +641,11 @@ class page_wiki_comments extends page_wiki {
 
         require_capability('mod/wiki:viewcomment', $this->modcontext, NULL, true, 'noviewcommentpermission', 'wiki');
 
+        if (!wiki_user_can_view($this->subwiki)) {
+            echo get_string('cannotviewpage', 'wiki');
+            return;
+        }
+
         $comments = wiki_get_comments($this->modcontext->id, $page->id);
 
         if (has_capability('mod/wiki:editcomment', $this->modcontext)) {
@@ -1120,6 +1125,11 @@ class page_wiki_diff extends page_wiki {
 
         require_capability('mod/wiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'wiki');
 
+        if (!wiki_user_can_view($this->subwiki)) {
+            echo get_string('cannotviewpage', 'wiki');
+            return;
+        }
+
         $this->print_diff_content();
     }
 
@@ -1226,6 +1236,11 @@ class page_wiki_history extends page_wiki {
         global $PAGE;
 
         require_capability('mod/wiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'wiki');
+
+        if (!wiki_user_can_view($this->subwiki)) {
+            echo get_string('cannotviewpage', 'wiki');
+            return;
+        }
 
         $this->print_history_content();
     }
@@ -1446,6 +1461,11 @@ class page_wiki_map extends page_wiki {
         global $CFG, $PAGE;
 
         require_capability('mod/wiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'wiki');
+
+        if (!wiki_user_can_view($this->subwiki)) {
+            echo get_string('cannotviewpage', 'wiki');
+            return;
+        }
 
         if ($this->view > 0) {
             //echo '<div><a href="' . $CFG->wwwroot . '/mod/wiki/map.php?pageid=' . $this->page->id . '">' . get_string('backtomapmenu', 'wiki') . '</a></div>';
@@ -2118,6 +2138,11 @@ class page_wiki_viewversion extends page_wiki {
         global $PAGE;
 
         require_capability('mod/wiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'wiki');
+
+        if (!wiki_user_can_view($this->subwiki)) {
+            echo get_string('cannotviewpage', 'wiki');
+            return;
+        }
 
         $this->print_version_view();
     }
