@@ -345,7 +345,10 @@ class mod_wiki_renderer extends plugin_renderer_base {
                     }
                     $baseurl->params($params);
                     $name = 'uid';
-                    $selected = $subwiki->userid;
+                    $selected = 0;
+                    if(!empty($subwiki)) {
+                        $selected = $subwiki->userid;
+                    }
                     echo $this->output->single_select($baseurl, $name, $options, $selected);
                     echo $this->output->container_end();
                 }
@@ -405,7 +408,10 @@ class mod_wiki_renderer extends plugin_renderer_base {
                 }
                 $baseurl->params($params);
                 $name = 'groupanduser';
-                $selected = $subwiki->groupid . '-' . $subwiki->userid;
+                $selected = 0;
+                if(!empty($subwiki)) {
+                    $selected = $subwiki->groupid . '-' . $subwiki->userid;
+                }
                 echo $this->output->single_select($baseurl, $name, $options, $selected);
                 echo $this->output->container_end();
 
@@ -452,7 +458,10 @@ class mod_wiki_renderer extends plugin_renderer_base {
                 }
                 $baseurl->params($params);
                 $name = 'groupanduser';
-                $selected = $subwiki->groupid . '-' . $subwiki->userid;
+                $selected = 0;
+                if(!empty($subwiki)) {
+                    $selected = $subwiki->groupid . '-' . $subwiki->userid;
+                }
                 echo $this->output->single_select($baseurl, $name, $options, $selected);
                 echo $this->output->container_end();
 
