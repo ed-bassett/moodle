@@ -26,6 +26,7 @@
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/wiki/lib.php');
 require_once($CFG->dirroot . '/mod/wiki/locallib.php');
+require_once($CFG->dirroot . '/mod/wiki/pagelib.php');
 
 $pageid       = required_param('pageid', PARAM_INT); // Page ID
 $wid          = optional_param('wid', 0, PARAM_INT); // Wiki ID
@@ -73,35 +74,11 @@ if (!$cm = get_coursemodule_from_instance("wiki", $subwiki->wikiid)) {
 // Checking course instance
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
-
-
-$PAGE->set_url('/mod/wiki/files.php', array('pageid'=>$pageid));
 require_login($course, true, $cm);
-$PAGE->set_context($context);
-$PAGE->set_title(get_string('wikifiles', 'wiki'));
-$PAGE->set_heading(get_string('wikifiles', 'wiki'));
-$PAGE->navbar->add(format_string(get_string('wikifiles', 'wiki')));
-echo $OUTPUT->header();
 
-$renderer = $PAGE->get_renderer('mod_wiki');
-
-$tabitems = array('view' => 'view', 'edit' => 'edit', 'comments' => 'comments', 'history' => 'history', 'map' => 'map', 'files' => 'files');
-
-$options = array('activetab'=>'files');
-echo $renderer->tabs($page, $tabitems, $options);
-
-
-echo $OUTPUT->box_start('generalbox');
-if (has_capability('mod/wiki:viewpage', $context)) {
-    echo $renderer->wiki_print_subwiki_selector($PAGE->activityrecord, $subwiki, $page, 'files');
-    echo $renderer->wiki_files_tree($context, $subwiki);
-} else {
-    echo $OUTPUT->notification(get_string('cannotviewfiles', 'wiki'));
-}
-echo $OUTPUT->box_end();
-
-if (has_capability('mod/wiki:managefiles', $context)) {
-    echo $OUTPUT->single_button(new moodle_url('/mod/wiki/filesedit.php', array('subwiki'=>$subwiki->id, 'pageid'=>$pageid)), get_string('editfiles', 'wiki'), 'get');
-}
-echo $OUTPUT->footer();
+$wikipage = new page_wiki_files($wiki, $subwiki, $cm);
+$wikipage->set_gid($currentgroup);
+$wikipage->set_page($page);
+$wikipage->print_header();
+$wikipage->print_content();
+$wikipage->print_footer();

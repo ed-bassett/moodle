@@ -838,6 +838,47 @@ class page_wiki_editcomment extends page_wiki {
 
 }
 
+class page_wiki_files extends page_wiki {
+    protected function create_navbar() {
+        global $PAGE, $CFG;
+
+        parent::create_navbar();
+        $PAGE->navbar->add(format_string(get_string('wikifiles', 'wiki')));
+    }
+
+    function set_search_string($search, $searchcontent) {
+        $swid = $this->subwiki->id;
+        if ($searchcontent) {
+            $this->search_result = wiki_search_all($swid, $search);
+        } else {
+            $this->search_result = wiki_search_title($swid, $search);
+        }
+
+    }
+
+    function set_url() {
+        global $PAGE, $CFG;
+        $PAGE->set_url($CFG->wwwroot . '/mod/wiki/files.php');
+        $PAGE->set_url('/mod/wiki/files.php', array('pageid'=>$this->page->id));
+    }
+    function print_content() {
+        global $PAGE, $OUTPUT;
+
+        $context = get_context_instance(CONTEXT_MODULE, $PAGE->cm->id);
+        require_capability('mod/wiki:viewpage', $context, NULL, true, 'noviewpagepermission', 'wiki');
+
+        if (has_capability('mod/wiki:viewpage', $context)) {
+            echo $this->wikioutput->wiki_files_tree($context, $this->subwiki);
+        } else {
+            echo $OUTPUT->notification(get_string('cannotviewfiles', 'wiki'));
+        }
+
+        if (has_capability('mod/wiki:managefiles', $context)) {
+            echo $OUTPUT->single_button(new moodle_url('/mod/wiki/filesedit.php', array('subwiki'=>$this->subwiki->id, 'pageid'=>$this->page->id)), get_string('editfiles', 'wiki'), 'get');
+        }
+    }
+}
+
 /**
  * Wiki page search page
  *
