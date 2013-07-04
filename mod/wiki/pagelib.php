@@ -933,6 +933,14 @@ class page_wiki_create extends page_wiki {
 
     function print_header() {
         $this->set_url();
+        if( empty($this->subwiki) ) {
+            // mock the subwiki so we can print a heading if this one doesn't yet exist (first page for group/user)
+            $mock_subwiki = new stdClass();
+            $mock_subwiki->groupid = optional_param('group', 0, PARAM_INT);
+            $mock_subwiki->userid  = optional_param('uid', 0, PARAM_INT);
+            $this->subwiki = $mock_subwiki;
+        }
+
         parent::print_header();
     }
 
